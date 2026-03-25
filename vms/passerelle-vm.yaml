@@ -1,0 +1,29 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: passerelle-vm
+spec:
+  running: true
+  template:
+    spec:
+      domain:
+        devices:
+          interfaces:
+          - name: default # Vers Internet
+            masquerade: {}
+          - name: nic-dmz # Vers le réseau DMZ
+            bridge: {}
+          - name: nic-lan # Vers le réseau LAN
+            bridge: {}
+        resources:
+          requests:
+            memory: 1Gi
+      networks:
+      - name: default
+        pod: {}
+      - name: nic-dmz
+        multus:
+          networkName: net-dmz
+      - name: nic-lan
+        multus:
+          networkName: net-lan
